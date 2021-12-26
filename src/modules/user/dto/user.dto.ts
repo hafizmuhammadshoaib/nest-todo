@@ -1,4 +1,5 @@
-import { IsNumber, IsString, MinLength } from 'class-validator';
+import { IsString, MinLength, IsEnum } from 'class-validator';
+import { Role } from '../role.enum';
 
 export namespace UserDto {
   export class createUser {
@@ -11,6 +12,9 @@ export namespace UserDto {
     @IsString()
     @MinLength(8)
     password: string;
+
+    @IsEnum(Role)
+    role: string;
   }
 
   export class updateUser extends createUser {}

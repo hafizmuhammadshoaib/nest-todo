@@ -17,8 +17,8 @@ export class AuthService {
       user?.password,
     );
     if (isPasswordCorrect) {
-      const { email, username, id } = user;
-      return { email, username, id };
+      const { email, username, id, role } = user;
+      return { email, username, id, role };
     }
     return null;
   }
@@ -28,6 +28,7 @@ export class AuthService {
       username: user.username,
       sub: user.id,
       email: user.email,
+      role: user.role.roleName,
     };
     return {
       access_token: this.jwtService.sign(payload),

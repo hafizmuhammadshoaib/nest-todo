@@ -8,7 +8,9 @@ import {
   Put,
   Request,
 } from '@nestjs/common';
+import { Roles } from 'src/utils/role-decorator';
 import { UserDto } from './dto/user.dto';
+import { Role } from './role.enum';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -24,6 +26,7 @@ export class UserController {
     return this.userService.getProfile(req.user.id);
   }
 
+  @Roles(Role.ADMIN)
   @Post()
   async create(@Body() body: UserDto.createUser) {
     await this.userService.createUser(body);

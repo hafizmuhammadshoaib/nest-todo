@@ -8,12 +8,15 @@ import {
   Put,
   Request,
 } from '@nestjs/common';
+import { Roles } from 'src/utils/role-decorator';
+import { Role } from '../user/role.enum';
 import { TodoDto } from './dto/todo.dto';
 import { TodoService } from './todo.service';
 
 @Controller('todo')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
+  @Roles(Role.ADMIN)
   @Get()
   async findAll() {
     return await this.todoService.findAll();
