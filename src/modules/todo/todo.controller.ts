@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
 } from '@nestjs/common';
 import { TodoDto } from './dto/todo.dto';
 import { TodoService } from './todo.service';
@@ -19,8 +20,8 @@ export class TodoController {
   }
 
   @Post()
-  async create(@Body() body: TodoDto.createTodo) {
-    return await this.todoService.createTodo(body);
+  async create(@Body() body: TodoDto.createTodo, @Request() req) {
+    return await this.todoService.createTodo({ ...body, userId: req.user.id });
   }
 
   @Put(':id')

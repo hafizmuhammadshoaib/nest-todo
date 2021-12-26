@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
@@ -32,5 +32,25 @@ export class UserService {
   private async encryptPassword(plainTextPassword: string): Promise<string> {
     const saltRounds = 10;
     return await hash(plainTextPassword, saltRounds);
+  }
+
+  public async compareEncryptedPassword(
+    plainTextPassword: string,
+    encryptedPassword: string,
+  ): Promise<boolean> {
+    return compare(plainTextPassword, encryptedPassword);
+  }
+
+  public async findOne(email: string): Promise<User | undefined> {
+    return this.userRepo.findOne({
+      where: { email },
+    });
+  }
+
+  public async getProfile(id: number): Promise<User> {
+    return this.userRepo.findOne({
+      where: { id },
+      select: ['email', 'username', 'id'],
+    });
   }
 }

@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
 } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -16,6 +17,11 @@ export class UserController {
   @Get()
   async findAll() {
     return await this.userService.findAll();
+  }
+
+  @Get('profile')
+  async profile(@Request() req) {
+    return this.userService.getProfile(req.user.id);
   }
 
   @Post()

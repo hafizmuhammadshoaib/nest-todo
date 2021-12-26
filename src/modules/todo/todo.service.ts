@@ -12,7 +12,9 @@ export class TodoService {
     return this.todoRepo.find({ select: ['content', 'id'] });
   }
 
-  public createTodo(todo: TodoDto.createTodo): Promise<InsertResult> {
+  public createTodo(
+    todo: TodoDto.createTodo & { userId: number },
+  ): Promise<InsertResult> {
     return this.todoRepo.insert(todo);
   }
 
