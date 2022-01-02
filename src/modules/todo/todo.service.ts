@@ -12,6 +12,10 @@ export class TodoService {
     return this.todoRepo.find({ select: ['content', 'id'] });
   }
 
+  public findByUserId(userId: number): Promise<Todo[]> {
+    return this.todoRepo.find({ where: { userId }, select: ['content', 'id'] });
+  }
+
   public createTodo(
     todo: TodoDto.createTodo & { userId: number },
   ): Promise<InsertResult> {

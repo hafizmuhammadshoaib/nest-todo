@@ -12,13 +12,15 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(username);
-    const isPasswordCorrect = await this.userService.compareEncryptedPassword(
-      pass,
-      user?.password,
-    );
-    if (isPasswordCorrect) {
-      const { email, username, id, role } = user;
-      return { email, username, id, role };
+    if (user) {
+      const isPasswordCorrect = await this.userService.compareEncryptedPassword(
+        pass,
+        user?.password,
+      );
+      if (isPasswordCorrect) {
+        const { email, username, id, role } = user;
+        return { email, username, id, role };
+      }
     }
     return null;
   }
