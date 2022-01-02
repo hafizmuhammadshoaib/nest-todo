@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { KafkaModule } from '../kafka/kafka.module';
+import { KafkaService } from '../kafka/kafka.service';
 import { RoleRepository } from './role.repository';
 import { UserController } from './user.controller';
 import { UserRepository } from './user.repository';
@@ -9,23 +10,9 @@ import { UserService } from './user.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserRepository, RoleRepository]),
-    ClientsModule.register([
-      {
-        name: 'KAFKA_LOGGER_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'kafka-logger',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'kafka-logger-consumer',
-          },
-        },
-      },
-    ]),
+    KafkaModule,
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, KafkaService],
 })
 export class UserModule {}

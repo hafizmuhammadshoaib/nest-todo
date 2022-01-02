@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { RolesGuard } from './modules/auth/role.guard';
+import { KafkaModule } from './modules/kafka/kafka.module';
 import { TodoModule } from './modules/todo/todo.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -39,6 +40,7 @@ import { UserModule } from './modules/user/user.module';
     TodoModule,
     UserModule,
     AuthModule,
+    KafkaModule,
   ],
   controllers: [AppController],
   providers: [

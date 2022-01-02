@@ -3,31 +3,28 @@ import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Post,
   Put,
   Request,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
 import { events } from 'src/utils/events';
+import { KafkaService } from '../kafka/kafka.service';
 import { Role } from '../user/role.enum';
 import { TodoDto } from './dto/todo.dto';
 import { TodoService } from './todo.service';
 
 @Controller('todo')
 export class TodoController {
-  @Inject('KAFKA_LOGGER_SERVICE') private readonly client: ClientKafka;
-  async onModuleInit() {
-    [events.LOG].forEach((key) => this.client.subscribeToResponseOf(`${key}`));
-    await this.client.connect();
-  }
-  constructor(private readonly todoService: TodoService) {}
+  constructor(
+    private readonly todoService: TodoService,
+    private readonly kafkaService: KafkaService,
+  ) {}
   @Get()
   async getTodos(@Request() req) {
-    this.client.emit<number>(events.LOG, {
+    this.kafkaService.client.emit<number>(events.LOG, {
       activity: 'todo.getTodos',
-      message: new Date(),
+      timestamp: new Date(),
       user: req.user,
     });
 
@@ -39,9 +36,9 @@ export class TodoController {
 
   @Post()
   async create(@Body() body: TodoDto.createTodo, @Request() req) {
-    this.client.emit<number>(events.LOG, {
+    this.kafkaService.client.emit<number>(events.LOG, {
       activity: 'todo.create',
-      message: new Date(),
+      timestamp: new Date(),
     });
 
     return await this.todoService.createTodo({ ...body, userId: req.user.id });
@@ -49,9 +46,9 @@ export class TodoController {
 
   @Put(':id')
   async update(@Param('id') id: number, @Body('content') content) {
-    this.client.emit<number>(events.LOG, {
+    this.kafkaService.client.emit<number>(events.LOG, {
       activity: 'todo.update',
-      message: new Date(),
+      timestamp: new Date(),
     });
 
     return await this.todoService.updateTodo({
@@ -62,9 +59,9 @@ export class TodoController {
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    this.client.emit<number>(events.LOG, {
+    this.kafkaService.client.emit<number>(events.LOG, {
       activity: 'todo.remove',
-      message: new Date(),
+      timestamp: new Date(),
     });
 
     return await this.todoService.deleteTodo(id);
