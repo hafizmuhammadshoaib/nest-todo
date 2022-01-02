@@ -1,26 +1,18 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { LoggerStreamController } from './modules/logger/loggerStream.controller';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { LoggerModule } from './modules/logger/logger.module';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'KAFKA_LOGGER_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'kafka-logger',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'kafka-logger-consumer',
-          },
-        },
-      },
-    ]),
+    ElasticsearchModule.registerAsync({
+      useFactory: () => ({
+        node: 'http://localhost:9200',
+      }),
+    }),
+    LoggerModule,
   ],
-  controllers: [LoggerStreamController],
+
+  controllers: [],
   providers: [],
 })
 export class MicroServiceModule {}

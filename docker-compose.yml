@@ -37,6 +37,14 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zk:2181
       KAFKA_MESSAGE_MAX_BYTES: 2000000
+    
+  elasticsearch:
+    image: elasticsearch:7.16.2
+    command: bin/elasticsearch -Expack.security.enabled=false -Ediscovery.type=single-node
+    networks:
+      - todo-prac
+    ports:
+      - "9200:9200"
 
 networks:
   todo-prac:

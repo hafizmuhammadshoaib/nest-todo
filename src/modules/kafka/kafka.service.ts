@@ -11,9 +11,9 @@ export class KafkaService {
         clientId: 'kafka-logger',
         brokers: ['localhost:9092'],
       },
-      consumer: {
-        groupId: 'kafka-logger-consumer',
-      },
+      // consumer: {
+      //   groupId: 'kafka-logger-consumer',
+      // },
     },
   })
   public readonly client: ClientKafka;
